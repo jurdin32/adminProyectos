@@ -25,6 +25,22 @@
                 className: '{{priorizacion.className}} text-white',
             })
         {% endfor %}
+        $(".rqp").click(function(){
+            $("#rq").text($(this).data('rq'))
+            $("#fi").val($(this).data('fi'))
+            $("#ff").val($(this).data('ff'))
+            $("#idp").val($(this).data('idp'))
+        })
+        $("#proyecto").change(function () {
+            let id = $(this).val()
+            if (id){
+                location.href = '/projects/requirements/planning/?proy=' + id
+                fecha1='{{proy.fecha_inicio|date:"Y-m-d"}}'
+            }else{
+                location.href = '/projects/requirements/planning/'
+            }
+        })
+
         $("#calendar").fullCalendar({
             header: {
                 left: 'prev,next today',
@@ -45,22 +61,6 @@
             }
         });
 
-        $(".rqp").click(function(){
-            $("#rq").text($(this).data('rq'))
-            $("#fi").val($(this).data('fi'))
-            $("#ff").val($(this).data('ff'))
-            $("#idp").val($(this).data('idp'))
-        })
-        $("#proyecto").change(function () {
-            let id = $(this).val()
-            if (id){
-                location.href = '/projects/requirements/planning/?proy=' + id
-                fecha1='{{proy.fecha_inicio|date:"Y-m-d"}}'
-            }else{
-                location.href = '/projects/requirements/planning/'
-            }
-
-        })
 
         $("#requerimiento").select2({
             maximumSelectionLength: 1
