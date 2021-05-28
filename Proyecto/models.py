@@ -89,6 +89,8 @@ class Priorizacion(models.Model):
         fi= datetime.datetime.strptime(str(self.fecha_inicio), "%Y-%m-%d")
         ff= datetime.datetime.strptime(str(self.fecha_fin), "%Y-%m-%d")
         dias=abs((ff - fi).days)
+        if dias==0:
+            dias=1
         self.dias=dias
         print(dias)
         super(Priorizacion, self).save()
