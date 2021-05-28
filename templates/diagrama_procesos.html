@@ -46,7 +46,7 @@
                     <div class="card-body">
                         <form action="" method="post">
                             {% csrf_token %}
-                            <textarea name="diagrama" id="diagrama" cols="30" rows="30" class="form-control form-shadow">{{ proy.diagramaprocesos_set.first.diagrama }}</textarea>
+                            <textarea name="diagrama" id="diagrama" cols="30" rows="30" class="form-control form-shadow">{{ diagrama.diagrama }}</textarea>
                             <br>
                             <button type="submit" class="btn btn-primary" style="width: 100%">Registrar</button>
                         </form>
@@ -62,7 +62,7 @@
                 </div>
                 <div class="card-body">
                     <div class='mermaid'>
-                        {{ proy.diagramaprocesos_set.first.diagrama }}
+                        {{ diagrama.diagrama }}
                     </div>
                 </div>
             </div>

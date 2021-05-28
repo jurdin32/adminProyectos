@@ -232,23 +232,27 @@ def cambiar_fecha_actividad(request):
 
 def diagrama_procesos(request):
     proy=None
+    diagrama=None
     proyectos=Proyecto.objects.all()
     if request.GET.get('proy'):
         proy=proyectos.get(id=request.GET.get('proy'))
+        diagrama=DiagramaProcesos.objects.filter(tipo=request.GET.get('type')).first()
     if request.POST:
         try:
-            diag=DiagramaProcesos.objects.get(id=proy.id,tipo=request.GET.get('type'))
-            diag.diagrama=request.POST.get('diagrama')
-            diag.save()
+            diagrama.diagrama=request.POST.get('diagrama')
+            diagrama.save()
+            messages.add_message(request, messages.SUCCESS, 'El diagrama se actualizó..!')
         except:
             DiagramaProcesos.objects.create(
                 proyecto_id=proy.id,
+                tipo=request.GET.get('type'),
                 diagrama=request.POST.get('diagrama')
             ).save()
-        messages.add_message(request,messages.SUCCESS,'Los cambios se registraron correctmente..!')
+            messages.add_message(request,messages.SUCCESS,'Los cambios se registraron correctmente..!')
     contexto={
         'proyectos':proyectos,
         'proy':proy,
+        'diagrama':diagrama,
     }
     return render(request,'diagrama_procesos.html',contexto)
 
