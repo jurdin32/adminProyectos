@@ -86,8 +86,8 @@ class Priorizacion(models.Model):
     
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        fi= datetime.datetime.strptime(self.fecha_inicio, "%Y-%m-%d")
-        ff= datetime.datetime.strptime(self.fecha_fin, "%Y-%m-%d")
+        fi= datetime.datetime.strptime(str(self.fecha_inicio), "%Y-%m-%d")
+        ff= datetime.datetime.strptime(str(self.fecha_fin), "%Y-%m-%d")
         dias=abs((ff - fi).days)
         self.dias=dias
         print(dias)
