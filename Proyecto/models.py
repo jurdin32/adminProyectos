@@ -58,7 +58,7 @@ class ApartadosAplicacion(models.Model):
         strGANTT = """graph TD\nA[Diagramas del %s]"""%self.proyecto.nombre
         contador=1
         for ap in apartados:
-            strGANTT+="\nA-->%s[%s]"%(contador,ap.nombre)
+            strGANTT+="\nA-->%s[%s]"%(ap.id,ap.nombre)
             contador+=1
         try:
             diagrama=DiagramaProcesos.objects.get(proyecto_id=self.proyecto_id,tipo="PROCESOS")
