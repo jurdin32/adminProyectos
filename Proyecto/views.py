@@ -85,6 +85,14 @@ def editarRequerimiento(request,id):
         messages.add_message(request,messages.SUCCESS,'Los cambios se realizarón con exito..!')
     return HttpResponseRedirect("/projects/requirements/?proj=%s" % req.proyecto_id)
 
+def agregarApartado(request,id):
+    proy=Proyecto.objects.get(id=id)
+    ApartadosAplicacion.objects.create(
+        proyecto=proy,
+        nombre=request.POST.get('seccion')
+    ).save()
+    messages.add_message(request, messages.SUCCESS, 'Se ha creado un nuevo proceso..!')
+    return HttpResponseRedirect("/projects/requirements/diagrama_process/?type=PROCESOS&proy=%s"%proy.id)
 
 def eliminarRequerimiento(request,id):
     proy=None

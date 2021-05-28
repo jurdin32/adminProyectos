@@ -20,4 +20,6 @@ urlpatterns = [
     path('requirements/move_date/', cambiar_fecha_actividad,name='cambiar_fecha_actividad'),
 
     path('requirements/diagrama_process/', diagrama_procesos, name='diagrama_procesos'),
+
+    path('requirements/apart/<int:id>', agregarApartado, name='agregarApartado'),
 ]
