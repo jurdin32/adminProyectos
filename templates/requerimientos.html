@@ -106,7 +106,7 @@
                                     {% for requerimiento in requerimientos %}
                                         <tr>
                                             <th scope="row" class="text-center">{{ forloop.counter }}</th>
-                                            <td><i>{{ requerimiento.apartado.nombre }}</i></td>
+                                            <td><strong>{{ requerimiento.apartado.nombre|upper }}</strong></td>
                                             <td>{{ requerimiento.descripcion }}</td>
                                             <td class="text-center">
                                                 <a href="{% url 'analisisRequerimiento' requerimiento.proyecto_id %}">
