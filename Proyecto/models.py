@@ -79,6 +79,7 @@ class ApartadosAplicacion(models.Model):
 
 class Requerimiento(models.Model):
     proyecto=models.ForeignKey(Proyecto,on_delete=models.CASCADE)
+    apartado=models.ForeignKey(ApartadosAplicacion,on_delete=models.CASCADE,null=True,blank=True)
     descripcion=models.TextField()
     prioridad=models.CharField(max_length=30,default="SIN PRIORIDAD")
 

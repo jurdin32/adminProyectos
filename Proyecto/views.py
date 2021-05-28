@@ -5,7 +5,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
-from Proyecto.models import Proyecto, Requerimiento, Analisis_Requerimientos, Priorizacion, DiagramaProcesos
+from Proyecto.models import Proyecto, Requerimiento, Analisis_Requerimientos, Priorizacion, DiagramaProcesos, \
+    ApartadosAplicacion
 
 lista_tipos=[
     'BooleanField',
@@ -62,6 +63,7 @@ def requerimientos(request):
         if request.GET.get('proj'):
             Requerimiento.objects.create(
                 proyecto_id=request.GET.get('proj'),
+                apartado_id=request.POST.get('apartado'),
                 descripcion = request.POST.get('requerimiento'),
             ).save()
             messages.add_message(request,messages.SUCCESS,'El requerimiento fué agregado..!')
