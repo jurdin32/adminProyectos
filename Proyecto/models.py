@@ -58,6 +58,17 @@ class ApartadosAplicacion(models.Model):
         for ap in apartados:
             strGANTT+="\nA-->%s [%s]"%(contador,self.nombre)
             contador+=1
+        try:
+            diagrama=DiagramaProcesos.objects.get(proyecto_id=self.proyecto_id,tipo="PROCESOS")
+            diagrama.diagrama=strGANTT
+            diagrama.save()
+        except:
+            DiagramaProcesos.objects.create(
+                proyecto_id=self.proyecto_id,
+                tipo='PROCESOS',
+                diagrama=strGANTT,
+
+            ).save()
         super(ApartadosAplicacion, self).save()
 
     class Meta:
@@ -133,7 +144,7 @@ class Priorizacion(models.Model):
                 tipo='GANTT',
                 diagrama=strGANTT,
 
-            )
+            ).save()
         super(Priorizacion, self).save()
 
     class Meta:
