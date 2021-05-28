@@ -52,6 +52,8 @@ class ApartadosAplicacion(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
+        super(ApartadosAplicacion, self).save()
+
         apartados = ApartadosAplicacion.objects.filter(proyecto_id=self.proyecto_id)
         strGANTT = """graph TD\nA[Diagramas del %s]"""%self.proyecto.nombre
         contador=1
@@ -69,7 +71,7 @@ class ApartadosAplicacion(models.Model):
                 diagrama=strGANTT,
 
             ).save()
-        super(ApartadosAplicacion, self).save()
+
 
     class Meta:
         verbose_name_plural="E1.1 Apartados del Proyecto"
