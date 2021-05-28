@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block script %}
+    <script>
+        $("#proyecto").select2();
+        $('#proyecto').on('select2:select', function (e) {
+            var data = e.params.data;
+            location.href = '{% url 'requerimientos' %}?proj=' + data.id
+        });
+
+        let proy;
+        let des;
+        let id;
+
+        $(".data").click(function(){
+            proy=$(this).data('proy')
+            des=$(this).data('des')
+            id =$(this).data('id')
+            $("#proy").val(proy)
+            $("#des").val(des)
+            $("#edit-requerimiento").attr('action','/projects/requirements/edit/'+id+'/')
+        })
+        $('#reversar').click(function (){
+            $("#proy").val(proy)
+            $("#des").val(des)
+            $("#edit-requerimiento").attr('action','/projects/requirements/edit/'+id+'/')
+        })
+
+        $(".agregarTabla").click(function (){
+            $("#idR").val($(this).data('id'))
+        })
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="page-title mb-4 d-flex align-items-center row">
+            <div class="col-md-6 mb-2">
+                <h4 class="weight500 d-inline-block pr-3 mr-3 border-right">Proyectos</h4>
+                <nav aria-label="breadcrumb" class="d-inline-block ">
+                    <ol class="breadcrumb p-0">
+                        <li class="breadcrumb-item active" aria-current="page">Requerimientos del Software</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-12 col-md-12">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-warning">
+                            <div class="custom-title">Requerimientos del Software</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'requerimientos' %}?proj={{ proy.id }}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label class="col-sm-3 col-form-label">Elegir el Proyecto</label>
+                                <div class="input-group">
+                                    <select name="proyecto" id="proyecto" class="form-control form-shadow">
+                                        <option value="">---- Seleccione ----</option>
+                                        {% for proyecto in proyectos %}
+                                            {% if proyecto.id == proy.id %}
+                                                <option value="{{ proyecto.id }}"
+                                                        selected="selected">{{ proyecto.nombre }}</option>
+                                            {% else %}
+                                                <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
+                                            {% endif %}
+
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 col-form-label">Descripción del Proyecto</label>
+                                <div class="input-group">
+                                    <textarea name="" readonly="readonly" id="informacion" cols="30" rows="6"
+                                              class="form-control form-shadow">{{ proy.descripcion }}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" class="form-control form-shadow"
+                                           placeholder="Escriba el requerimiento" name="requerimiento">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-warning" type="submit"><i
+                                                class="fa fa-plus-circle f14"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group table-responsive">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Código</th>
+                                        <th scope="col">Descripción</th>
+                                        <th scope="col">Análisis</th>
+                                        <th scope="col">Tablas</th>
+                                        <th scope="col">Editar</th>
+                                        <th scope="col">Eliminar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for requerimiento in requerimientos %}
+                                        <tr>
+                                            <th scope="row" class="text-center">{{ forloop.counter }}</th>
+                                            <td>{{ requerimiento.descripcion }}</td>
+                                            <td class="text-center">
+                                                <a href="{% url 'analisisRequerimiento' requerimiento.proyecto_id %}">
+                                                    <i class="fa fa-dashboard text-info"></i>
+                                                </a>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="" data-toggle="modal" data-target="#agregarTabla" class="agregarTabla"
+                                                    data-id="{{ requerimiento.id }}"
+                                                >
+                                                    <i class="fa fa-database text-success"></i>
+                                                </a>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="#" class="data" data-toggle="modal" data-target="#modalEdit"
+                                                data-proy="{{ requerimiento.proyecto.nombre }}"
+                                                data-des="{{ requerimiento.descripcion }}"
+                                                data-id="{{ requerimiento.id }}"
+                                                >
+                                                    <i class="fa fa-edit text-warning"></i>
+                                                </a>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'eliminarRequerimiento' requerimiento.id %}">
+                                                    <i class="fa fa-remove text-danger"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel5">Requerimiento</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="edit-requerimiento" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Proyecto:</label>
+                                <input type="text" readonly="readonly"  class="form-control" id="proy">
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">Requerimiento:</label>
+                                <textarea class="form-control" required="required" style="resize: none; height: 200px" name="des" id="des"></textarea>
+                            </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="reversar">Reversar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Enviar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="agregarTabla" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel5">Nueva Tabla</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="{%  url 'agregarTabla' %}">
+                {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Nombre tabla</label>
+                            <input type="hidden" id="idR" name="req">
+                            <input type="text" class="form-control" required="required" id="tabla" name="tabla">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+

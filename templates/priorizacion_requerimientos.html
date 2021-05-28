@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block script %}
+    <script>
+        $("#proyecto").select2();
+        $('#proyecto').on('select2:select', function (e) {
+            var data = e.params.data;
+            location.href = '{% url 'priorizacion' %}?proj=' + data.id
+        });
+
+        let proy;
+        let des;
+        let id;
+
+        $(".data").click(function () {
+            $("#prioridadform").attr('action', '/projects/requirements/change/priority/'+$(this).data('id')+'/')
+        })
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="page-title mb-4 d-flex align-items-center row">
+            <div class="col-md-6 mb-2">
+                <h4 class="weight500 d-inline-block pr-3 mr-3 border-right">Proyectos</h4>
+                <nav aria-label="breadcrumb" class="d-inline-block ">
+                    <ol class="breadcrumb p-0">
+                        <li class="breadcrumb-item active" aria-current="page">Requerimientos del Software</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-12 col-md-12">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-warning">
+                            <div class="custom-title">Requerimientos del Software</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="col-sm-3 col-form-label">Elegir el Proyecto</label>
+                            <div class="input-group">
+                                <select name="proyecto" id="proyecto" class="form-control form-shadow">
+                                    <option value="">---- Seleccione ----</option>
+                                    {% for proyecto in proyectos %}
+                                        {% if proyecto.id == proy.id %}
+                                            <option value="{{ proyecto.id }}"
+                                                    selected="selected">{{ proyecto.nombre }}</option>
+                                        {% else %}
+                                            <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
+                                        {% endif %}
+
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-form-label">Descripción del Proyecto</label>
+                            <div class="input-group">
+                                    <textarea name="" readonly="readonly" id="informacion" cols="30" rows="6"
+                                              class="form-control form-shadow">{{ proy.descripcion }}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="card card-shadow mb-4 ">
+                                <div class="card-header border-0">
+                                    <div class="custom-title-wrap bar-warning">
+                                        <div class="custom-title">Todos los requerimientos</div>
+                                        <div class=" widget-action-link">
+                                            <div class="dropdown">
+                                                <a href="#"
+                                                   class="btn btn-transparent text-secondary dropdown-hover p-0"
+                                                   data-toggle="dropdown">
+                                                    Prioridad <i class="fa fa-caret-down pl-2"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right vl-dropdown">
+                                                    <a class="dropdown-item" href="{{ request.get_full_path }}&priori=SIN+PRIORIDAD"> SIN PRIORIDAD</a>
+                                                    <a class="dropdown-item" href="{{ request.get_full_path }}&priori=ALTA"> ALTA (Son obligatorios)</a>
+                                                    <a class="dropdown-item" href="{{ request.get_full_path }}&priori=MEDIA"> MEDIA (No impresindibles)</a>
+                                                    <a class="dropdown-item" href="{{ request.get_full_path }}&priori=BAJA"> BAJA (Pueden ser eliminados)</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled mb-0 list-widget">
+                                        {% for requerimiento in requerimientos %}
+                                            <li>
+                                                <div class="media mb-4">
+                                                    <div class="media-body list-widget-border">
+                                                        <div class="float-left">
+                                                            <h6 class="text-uppercase mb-0">{{ requerimiento.proyecto }}
+                                                                <span class="text-warning pl-3">
+                                                                    <a href="#" data-toggle="modal" id="xx{{ requerimiento.id }}"
+                                                                       data-target="#prioridad"
+                                                                       data-id="{{ requerimiento.id }}"
+                                                                       class="{% if requerimiento.prioridad == "ALTA" %}text-danger{% elif requerimiento.prioridad == "MEDIA" %}text-info{% elif requerimiento.prioridad == "BAJA" %}text-success{% else %}text-warning{% endif %}
+                                                                       data">{{ requerimiento.prioridad }}
+
+                                                                    </a>
+                                                                </span>
+                                                            </h6>
+                                                            <span class="text-muted">{{ requerimiento.descripcion }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="prioridad" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel5"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel5">Cambiar Prioridad</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" id="prioridadform">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Seleccione la prioridad:</label>
+                            <select name="prior" id="prior" class="form-control">
+                                <option value="SIN PRIORIDAD">SIN PRIORIDAD</option>
+                                <option value="ALTA">ALTA (Son obligatorios)</option>
+                                <option value="MEDIA">MEDIA (No impresindibles)</option>
+                                <option value="BAJA">BAJA (Pueden ser eliminados)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Enviar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

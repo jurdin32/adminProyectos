@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block links %}
+    <link href="{% static 'assets/vendor/fullcalendar-3.7.0/fullcalendar.css' %}" rel='stylesheet'/>
+    <style>
+        .fc-title {
+            line-height: 30px;
+        }
+    </style>
+{% endblock %}
+{% block script %}
+    <script src='{% static "assets/vendor/fullcalendar-3.7.0/lib/moment.min.js" %}'></script>
+    <script src='{% static "assets/vendor/fullcalendar-3.7.0/fullcalendar.js" %}'></script>
+    <script src='{% static 'assets/vendor/js-init/init-calendar-external-events.js' %}'></script>
+    <script src="{% static 'assets/vendor/fullcalendar-3.7.0/locale/es.js' %}"></script>
+    <script>
+        let eventos = []
+        {% for priorizacion in priorizaciones %}
+            eventos.push({
+                id: '{{ priorizacion.id }}',
+                title: 'R{{ forloop.counter }} {{ priorizacion.requerimiento.descripcion|linebreaksbr }}',
+                end: '{{priorizacion.fecha_fin|date:"Y-m-d"}}T12:59:00',
+                start: '{{priorizacion.fecha_inicio|date:"Y-m-d"}}',
+                className: '{{priorizacion.className}} text-white',
+            })
+        {% endfor %}
+        console.log(eventos)
+        $("#calendar").fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaDay',
+            },
+            lang: 'es',
+            events: eventos,
+            eventColor: '#F4F6F9',
+            navLinks: true, // can click day/week names to navigate views
+            editable: false,
+            eventLimit: true, // allow "more" link when too many events
+            droppable: true, // this allows things to be dropped onto the calendar
+            dayClick: function (date) {
+                $("#registroCal").modal('show')
+                $("#f1").val(date.format())
+            }
+        });
+
+        $(".rqp").click(function(){
+            $("#rq").text($(this).data('rq'))
+            $("#fi").val($(this).data('fi'))
+            $("#ff").val($(this).data('ff'))
+            $("#idp").val($(this).data('idp'))
+        })
+        $("#proyecto").change(function () {
+            let id = $(this).val()
+            location.href = '/projects/requirements/planning/?proy=' + id
+        })
+
+        $("#requerimiento").select2({
+            maximumSelectionLength: 1
+        })
+        $('#requerimiento').on('select2:select', function (e) {
+            var data = e.params.data;
+            $("#priory").text(data.title)
+        });
+
+    </script>
+{% endblock %}
+{% block main %}
+    <div class="container-fluid">
+        <!--page title-->
+        <div class="page-title mb-4 d-flex align-items-center">
+            <div class="mr-auto">
+                <h4 class="weight500 d-inline-block pr-3 mr-3 border-right ">Planificación de las Actividades</h4>
+            </div>
+        </div>
+        <!--/page title-->
+
+        <!--calendar-->
+        <div class="row">
+            <div class=" col-md-3">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-primary">
+                            <div class="custom-title">Actividades</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <select name="proyecto" id="proyecto" class="form-control">
+                            <option value="">--- Seleccione ---</option>
+                            {% for proyecto in proyectos %}
+                                {% if  proyecto.id == proy.id %}
+                                    <option value="{{ proyecto.id }}" selected="selected">{{ proyecto.nombre }}</option>
+                                {% else %}
+                                    <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
+                                {% endif %}
+
+                            {% endfor %}
+                        </select>
+                        <br>
+                        <div id="">
+                            {% for priorizacion in priorizaciones %}
+                                <div class="fc-event {{ priorizacion.className }} text-white" style="padding: 5px; margin-bottom: 10px">
+                                <div class="fc-title">
+                                    <div class="fc-content">
+                                        <a href="#" data-toggle="modal"
+                                           data-target="#modificarCal"
+                                           class="text-white rqp"
+                                           data-rq="{{ priorizacion.requerimiento.descripcion }}"
+                                           data-fi="{{ priorizacion.fecha_inicio|date:"Y-m-d" }}"
+                                           data-ff="{{ priorizacion.fecha_fin|date:"Y-m-d" }}"
+                                           data-idp="{{ priorizacion.id }}"
+                                        >
+                                            R{{ forloop.counter }} del {{ priorizacion.fecha_inicio|date:'d/m/Y' }} al {{ priorizacion.fecha_fin|date:'d/m/Y' }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class=" col-md-9">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-warning">
+                            <div class="custom-title">Calendario de actividades</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id='calendar'></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="registroCal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel5">Agregar Evento</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="message-text" class="badge-info badge" id="priory"></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Seleccione el Requerimiento</label>
+                            <select name="requerimiento" id="requerimiento" required="required"
+                                    class="form-control form-shadow" style="width: 100%" multiple>
+                                <option value="">--- Seleccione ---</option>
+                                {% for requerimiento in requerimientos %}
+                                    <option value="{{ requerimiento.id }}" title="{{ requerimiento.prioridad }}">
+                                        R{{ forloop.counter }} {{ requerimiento.descripcion }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Fecha de Inicio:</label>
+                            <input type="date" required="required" id="f1" name="f1" class="form-control form-shadow">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Fecha de Fin:</label>
+                            <input type="date" required="required" id="f2" name="f2" class="form-control form-shadow">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modificarCal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel5">Modificar Evento</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="{% url 'cambiar_fecha_actividad' %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="message-text" class="badge-info badge" id="priory"></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Requerimiento</label>
+                            <textarea name="rq" id="rq" cols="30" readonly="readonly" style="resize: none" rows="5" class="form-control form-shadow"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Fecha de Inicio:</label>
+                            <input type="date" required="required" id="fi" name="fi" class="form-control form-shadow">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Fecha de Fin:</label>
+                            <input type="date" required="required" id="ff" name="ff" class="form-control form-shadow">
+                            <input type="hidden" name="idp" id="idp">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

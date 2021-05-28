@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block script %}
+    <script src="{% static 'assets/vendor/date-picker/js/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/date-picker/locales/bootstrap-datepicker.es.min.js' %}" charset="UTF-8" ></script>
+    <script>
+    $('#datepicker').datepicker({
+        todayBtn: "linked",
+        clearBtn: true,
+        autoclose: true,
+        format:"yyyy-mm-dd",
+        todayHighlight: true,
+        language:'es',
+        orientation: "bottom",
+        templates: {
+            leftArrow: '<i class="fa fa-angle-left"></i>',
+            rightArrow: '<i class="fa fa-angle-right"></i>'
+        }
+    });
+    </script>
+    <script>
+    $("#fecha").inputmask("yyyy-mm-dd",{})
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="page-title mb-4 d-flex align-items-center row">
+            <div class="col-md-6 mb-2">
+                <h4 class="weight500 d-inline-block pr-3 mr-3 border-right">Proyectos</h4>
+                <nav aria-label="breadcrumb" class="d-inline-block ">
+                    <ol class="breadcrumb p-0">
+                        <li class="breadcrumb-item active" aria-current="page">Analisis Inicial</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-12 col-md-12">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-warning">
+                            <div class="custom-title">Descripción del Proyecto</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'registroProyecto' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label class="col-sm-3 col-form-label">Fecha de inicio del Proyecto</label>
+                                <div class="input-group date" id="datepicker">
+                                    <input type="text" class="form-control form-shadow" name="fecha" id="fecha" required="required" value="{{ fecha|date:"Y-m-d" }}">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-warning" type="button"><i class="fa fa-calendar f14"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 col-form-label">Nombre del Cliente</label>
+                                <div class="input-group">
+                                    <input type="text" required="required" name="cliente" class="form-control form-shadow">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-warning" type="button"><i class="fa fa-user-circle f14"></i></button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 col-form-label">Nombre del Proyecto</label>
+                                <div class="input-group">
+                                    <input type="text" required="required" name="nombre" class="form-control form-shadow">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-warning" type="button"><i class="fa fa-user-circle f14"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail34" class="col-sm-3 col-form-label">Descripción del
+                                    Proyecto</label>
+                                <textarea class="form-control form-shadow" name="descripcion" required="required"
+                                          rows="10"></textarea>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12 text-center">
+                                    <button type="submit" class="btn btn-warning">Registrar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
