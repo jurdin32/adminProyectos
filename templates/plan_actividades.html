@@ -35,12 +35,12 @@
             let id = $(this).val()
             if (id){
                 location.href = '/projects/requirements/planning/?proy=' + id
-                fecha1='{{proy.fecha_inicio|date:"Y-m-d"}}'
+
             }else{
                 location.href = '/projects/requirements/planning/'
             }
         })
-        console.log('fechaInicio:',fecha1)
+        console.log('fechaInicio:','{{proy.fecha_inicio|date:"Y-m-d"}}')
         $("#calendar").fullCalendar({
             header: {
                 left: 'prev,next today',
