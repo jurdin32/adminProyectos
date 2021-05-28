@@ -56,7 +56,12 @@
         })
         $("#proyecto").change(function () {
             let id = $(this).val()
-            location.href = '/projects/requirements/planning/?proy=' + id
+            if (id){
+                location.href = '/projects/requirements/planning/?proy=' + id
+            }else{
+                location.href = '/projects/requirements/planning/'
+            }
+
         })
 
         $("#requerimiento").select2({
