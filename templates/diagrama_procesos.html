@@ -35,7 +35,7 @@
                         <form action="{% url 'agregarApartado' proy.id %}" method="post">
                             {% csrf_token %}
 
-                            <input type="text" required="required" name="seccion" id="seccion" class="form-control form-shadow">
+                            <input type="text" required="required" name="seccion" id="seccion" placeholder="Nuevo proceso" class="form-control form-shadow">
                             <br>
                             <button type="submit" class="btn btn-primary" style="width: 100%">Registrar</button>
                         </form>
