@@ -156,6 +156,8 @@ def eliminarCampoTabla(request,id):
     messages.add_message(request, messages.SUCCESS, 'Se ha eliminado el campo de datos..!')
     return HttpResponseRedirect('/projects/requirements/analystic/%s/' % proy )
 
+def opcionesMenu(request):
+    return ""
 #paso 4
 def priorizacion_requerimientos(request):
     proyectos = Proyecto.objects.all()
