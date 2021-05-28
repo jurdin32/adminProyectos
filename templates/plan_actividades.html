@@ -15,7 +15,7 @@
     <script src="{% static 'assets/vendor/fullcalendar-3.7.0/locale/es.js' %}"></script>
     <script>
         let eventos = []
-        let fecha1=""
+        let fecha1=Date.now()
         {% for priorizacion in priorizaciones %}
             {% if forloop.counter == 1 %}
                 fecha1='{{priorizacion.fecha_inicio|date:"Y-m-d"}}'
@@ -28,7 +28,6 @@
                 className: '{{priorizacion.className}} text-white',
             })
         {% endfor %}
-        console.log(eventos,fecha1)
         $("#calendar").fullCalendar({
             header: {
                 left: 'prev,next today',
