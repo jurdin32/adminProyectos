@@ -16,6 +16,11 @@ class AdminProyecto(admin.ModelAdmin):
     list_display_links = Attr(Proyecto)
     inlines = [RequerimientosInline]
 
+@admin.register(ApartadosAplicacion)
+class AdminApartadosAplicacion(admin.ModelAdmin):
+    list_display = Attr(ApartadosAplicacion)
+    list_display_links = Attr(ApartadosAplicacion)
+
 
 class AnalisisRequerimientoInline(admin.StackedInline):
     model = Analisis_Requerimientos

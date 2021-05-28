@@ -47,6 +47,7 @@ class Proyecto(models.Model):
         verbose_name_plural="E1 Especificaiones del Proyecto"
 
 class ApartadosAplicacion(models.Model):
+    proyecto=models.ForeignKey
     nombre=models.CharField(max_length=50)
 
     class Meta:
