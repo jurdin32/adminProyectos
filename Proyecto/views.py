@@ -80,7 +80,7 @@ def editarRequerimiento(request,id):
     req=Requerimiento.objects.get(id=id)
     if request.POST:
         req.descripcion=request.POST.get('des')
-        req.apartado_id= request.POST.get('apartado'),
+        req.apartado_id= request.POST.get('apartado')
         req.save()
         messages.add_message(request,messages.SUCCESS,'Los cambios se realizarón con exito..!')
     return HttpResponseRedirect("/projects/requirements/?proj=%s" % req.proyecto_id)
