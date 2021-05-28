@@ -38,10 +38,10 @@
                 fecha='{{proy.fecha_inicio|date:"Y-m-d"}}'
             }else{
                 location.href = '/projects/requirements/planning/'
-                fecha=new Date.now()
+                fecha=new Date()
             }
         })
-        console.log('fechaInicio:',fecha)
+        console.log('fechaInicio:',fecha.getDate())
 
         $("#calendar").fullCalendar({
             header: {
