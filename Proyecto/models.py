@@ -96,9 +96,15 @@ class Priorizacion(models.Model):
         strGANTT="""gantt\ntitle Diagrama de tiempos\ndateFormat  YYYY-MM-DD"""
 
         contador=1
+        dias=0
+        fecha1=""
         for req in requerimientos:
             strGANTT+='\nRequerimiento [%s]:a1, %s, %sd'%(contador,req.fecha_inicio,req.dias)
-            contador+=1
+            dias+=req.dias
+            if contador==1:
+                fecha1=req.fecha_inicio
+            contador += 1
+        strGANTT +='\nRetroalimentación: a1, %s, %sd'%(fecha1,dias)
         try:
             diagrama=DiagramaProcesos.objects.get(proyecto_id=self.requerimiento.proyecto_id,tipo="GANTT")
             diagrama.diagrama=strGANTT
