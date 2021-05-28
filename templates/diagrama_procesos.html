@@ -34,10 +34,15 @@
                     <div class="card-body">
                         <form action="{% url 'agregarApartado' proy.id %}" method="post">
                             {% csrf_token %}
-
-                            <input type="text" required="required" name="seccion" id="seccion" placeholder="Nuevo proceso" class="form-control form-shadow">
-                            <br>
-                            <button type="submit" class="btn btn-primary" style="width: 100%">Registrar</button>
+                            <div class="input-group mb-3">
+                                    <input type="text" class="form-control"
+                                           aria-label="Recipient's username"
+                                           name="seccion" id="seccion" placeholder="Nuevo proceso"
+                                           aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-danger" type="submit">Registrar</button>
+                                    </div>
+                                </div>
                         </form>
                     </div>
                 {% endif %}
