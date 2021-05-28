@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block links %}
+
+{% endblock %}
+{% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({startOnLoad:true});
+    </script>
+    <script>
+        $("#proyecto").change(function () {
+            let id = $(this).val()
+            location.href = '/projects/requirements/diagrama_process/?proy=' + id
+        })
+    </script>
+{% endblock %}
+{% block main %}
+    <div class="container-fluid">
+        <div class="page-title mb-4 d-flex align-items-center">
+            <div class="mr-auto">
+                <h4 class="weight500 d-inline-block pr-3 mr-3 border-right ">Diagrama de Procesos</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class=" col-md-3">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-primary">
+                            <div class="custom-title">Proyectos</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <select name="proyecto" id="proyecto" class="form-control">
+                            <option value="">--- Seleccione ---</option>
+                            {% for proyecto in proyectos %}
+                                {% if  proyecto.id == proy.id %}
+                                    <option value="{{ proyecto.id }}" selected="selected">{{ proyecto.nombre }}</option>
+                                {% else %}
+                                    <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
+                                {% endif %}
+
+                            {% endfor %}
+                        </select>
+                        <br>
+                        <div id="">
+                            {% for priorizacion in priorizaciones %}
+                                <div class="fc-event {{ priorizacion.className }} text-white" style="padding: 5px; margin-bottom: 10px">
+                                <div class="fc-title">
+                                    <div class="fc-content">
+                                        <a href="#" data-toggle="modal"
+                                           data-target="#modificarCal"
+                                           class="text-white rqp"
+                                           data-rq="{{ priorizacion.requerimiento.descripcion }}"
+                                           data-fi="{{ priorizacion.fecha_inicio|date:"Y-m-d" }}"
+                                           data-ff="{{ priorizacion.fecha_fin|date:"Y-m-d" }}"
+                                           data-idp="{{ priorizacion.id }}"
+                                        >
+                                            R{{ forloop.counter }} del {{ priorizacion.fecha_inicio|date:'d/m/Y' }} al {{ priorizacion.fecha_fin|date:'d/m/Y' }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" col-md-9">
+            <div class="card card-shadow mb-4">
+                <div class="card-header border-0">
+                    <div class="custom-title-wrap bar-warning">
+                        <div class="custom-title">Procesos</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class='mermaid'>
+                        {{ proy.diagramaprocesos_set.first.diagrama }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+

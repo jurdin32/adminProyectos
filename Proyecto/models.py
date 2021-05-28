@@ -84,6 +84,13 @@ class Priorizacion(models.Model):
     class Meta:
         verbose_name_plural="E4 Priorización de actividades"
 
+class DiagramaProcesos(models.Model):
+    proyecto=models.ForeignKey(Proyecto,on_delete=models.CASCADE)
+    diagrama=models.TextField()
+
+    class Meta:
+        verbose_name_plural = "E5 Diagrama de procesos"
+
 
 
 

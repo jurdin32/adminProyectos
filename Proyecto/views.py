@@ -229,3 +229,14 @@ def cambiar_fecha_actividad(request):
     priory.save()
     messages.add_message(request, messages.SUCCESS, 'Se ha modificado la fecha de la prioridad..!')
     return HttpResponseRedirect("/projects/requirements/planning/?proy=%s"%priory.requerimiento.proyecto_id)
+
+def diagrama_procesos(request):
+    proy=None
+    proyectos=Proyecto.objects.all()
+    if request.GET.get('proy'):
+        proy=proyectos.get(id=request.GET.get('proy'))
+    contexto={
+        'proyectos':proyectos,
+        'proy':proy,
+    }
+    return render(request,'diagrama_procesos.html',contexto)

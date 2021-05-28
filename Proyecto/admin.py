@@ -36,3 +36,8 @@ class AdminAnalisis_Requerimientos(admin.ModelAdmin):
 class AdminPriorizacion(admin.ModelAdmin):
     list_display = Attr(Priorizacion)
     list_display_links = Attr(Priorizacion)
+
+@admin.register(DiagramaProcesos)
+class AdminDiagramaProcesos(admin.ModelAdmin):
+    list_display = Attr(DiagramaProcesos)
+    list_display_links = Attr(DiagramaProcesos)

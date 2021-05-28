@@ -18,4 +18,6 @@ urlpatterns = [
 
     path('requirements/planning/', plan_actividades,name='plan_actividades'),
     path('requirements/move_date/', cambiar_fecha_actividad,name='cambiar_fecha_actividad'),
+
+    path('requirements/diagrama_process/', diagrama_procesos, name='diagrama_procesos'),
 ]
