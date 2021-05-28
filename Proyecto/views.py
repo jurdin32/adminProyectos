@@ -60,10 +60,10 @@ def requerimientos(request):
         proy=proyectos.get(id=request.GET.get('proj'))
         requerimiento=proy.requerimiento_set.all()
     if request.POST:
+        print(request.POST)
         if request.GET.get('proj'):
             Requerimiento.objects.create(
                 proyecto_id=request.GET.get('proj'),
-                apartado_id=request.POST.get('apartado'),
                 descripcion = request.POST.get('requerimiento'),
             ).save()
             messages.add_message(request,messages.SUCCESS,'El requerimiento fué agregado..!')
@@ -80,6 +80,7 @@ def editarRequerimiento(request,id):
     req=Requerimiento.objects.get(id=id)
     if request.POST:
         req.descripcion=request.POST.get('des')
+        req.apartado_id = request.POST.get('apartado'),
         req.save()
         messages.add_message(request,messages.SUCCESS,'Los cambios se realizarón con exito..!')
     return HttpResponseRedirect("/projects/requirements/?proj=%s" % req.proyecto_id)
