@@ -92,7 +92,24 @@ class Priorizacion(models.Model):
         if dias==0:
             dias=1
         self.dias=dias
-        print(dias)
+        requerimientos=Priorizacion.objects.filter(requerimiento__proyecto_id=self.requerimiento.proyecto_id)
+        strGANTT="""gantt\ntitle Diagrama de tiempos\ndateFormat  YYYY-MM-DD"""
+
+        contador=1
+        for req in requerimientos:
+            strGANTT+='\nRequerimiento [%s]:a1, %s, %sd'%(contador,req.fecha_inicio,req.dias)
+            contador+=1
+        try:
+            diagrama=DiagramaProcesos.objects.get(proyecto_id=self.requerimiento.proyecto_id,tipo="GANTT")
+            diagrama.diagrama=strGANTT
+            diagrama.save()
+        except:
+            DiagramaProcesos.objects.create(
+                proyecto_id=self.requerimiento.proyecto_id,
+                tipo='GANTT',
+                diagrama=strGANTT,
+
+            )
         super(Priorizacion, self).save()
 
     class Meta:
