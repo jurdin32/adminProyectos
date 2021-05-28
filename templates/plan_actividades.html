@@ -17,9 +17,6 @@
         let eventos = []
         let fecha1=Date.now()
         {% for priorizacion in priorizaciones %}
-            {% if forloop.counter == 1 %}
-                fecha1='{{priorizacion.fecha_inicio|date:"Y-m-d"}}'
-            {% endif %}
             eventos.push({
                 id: '{{ priorizacion.id }}',
                 title: 'R{{ forloop.counter }} {{ priorizacion.requerimiento.descripcion|linebreaksbr }}',
@@ -58,6 +55,7 @@
             let id = $(this).val()
             if (id){
                 location.href = '/projects/requirements/planning/?proy=' + id
+                fecha1='{{proy.fecha_inicio|date:"Y-m-d"}}'
             }else{
                 location.href = '/projects/requirements/planning/'
             }
