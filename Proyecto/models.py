@@ -50,6 +50,16 @@ class ApartadosAplicacion(models.Model):
     proyecto=models.ForeignKey(Proyecto,on_delete=models.CASCADE,null=True,blank=True)
     nombre=models.CharField(max_length=50)
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        apartados = ApartadosAplicacion.objects.filter(proyecto_id=self.proyecto_id)
+        strGANTT = """graph TD\nA[Diagramas del %s]"""%self.proyecto.nombre
+        contador=1
+        for ap in apartados:
+            strGANTT+="\nA-->%s [%s]"%(contador,self.nombre)
+            contador+=1
+        super(ApartadosAplicacion, self).save()
+
     class Meta:
         verbose_name_plural="E1.1 Apartados del Proyecto"
 
