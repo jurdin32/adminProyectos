@@ -123,9 +123,10 @@ class Priorizacion(models.Model):
         if dias==0:
             dias=1
         self.dias=dias
+        super(Priorizacion, self).save()
+
         requerimientos=Priorizacion.objects.filter(requerimiento__proyecto_id=self.requerimiento.proyecto_id)
         strGANTT="""gantt\ntitle Diagrama de tiempos\ndateFormat  YYYY-MM-DD"""
-
         contador=1
         dias=0
         fecha1=""
@@ -147,8 +148,6 @@ class Priorizacion(models.Model):
                 diagrama=strGANTT,
 
             ).save()
-        super(Priorizacion, self).save()
-
     class Meta:
         verbose_name_plural="E4 Priorización de actividades"
 
