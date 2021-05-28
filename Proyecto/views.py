@@ -235,7 +235,6 @@ def diagrama_procesos(request):
     proyectos=Proyecto.objects.all()
     if request.GET.get('proy'):
         proy=proyectos.get(id=request.GET.get('proy'))
-
     if request.POST:
         try:
             diag=DiagramaProcesos.objects.get(id=proy.id)

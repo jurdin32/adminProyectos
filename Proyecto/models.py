@@ -85,6 +85,7 @@ class Priorizacion(models.Model):
         verbose_name_plural="E4 Priorización de actividades"
 
 class DiagramaProcesos(models.Model):
+    tipo=models.CharField(max_length=30,default="PROCESOS")
     proyecto=models.ForeignKey(Proyecto,on_delete=models.CASCADE)
     diagrama=models.TextField()
 
