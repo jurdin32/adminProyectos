@@ -234,7 +234,10 @@ def diagrama_procesos(request):
     proy=None
     diagrama=None
     proyectos=Proyecto.objects.all()
-    diagrama = DiagramaProcesos.objects.filter(tipo=request.GET.get('type')).first()
+    try:
+        diagrama = DiagramaProcesos.objects.filter(tipo=request.GET.get('type'),proyecto_id=request.GET.get('proy')).first()
+    except:
+        pass
     if request.GET.get('proy'):
         proy=proyectos.get(id=request.GET.get('proy'))
     if request.POST:
