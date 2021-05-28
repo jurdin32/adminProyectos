@@ -237,7 +237,7 @@ def diagrama_procesos(request):
         proy=proyectos.get(id=request.GET.get('proy'))
     if request.POST:
         try:
-            diag=DiagramaProcesos.objects.get(id=proy.id)
+            diag=DiagramaProcesos.objects.get(id=proy.id,tipo=request.GET.get('type'))
             diag.diagrama=request.POST.get('diagrama')
             diag.save()
         except:
