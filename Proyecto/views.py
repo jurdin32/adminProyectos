@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
-from Proyecto.models import Proyecto, Requerimiento, Analisis_Requerimientos, Priorizacion
+from Proyecto.models import Proyecto, Requerimiento, Analisis_Requerimientos, Priorizacion, DiagramaProcesos
 
 lista_tipos=[
     'BooleanField',
@@ -235,8 +235,21 @@ def diagrama_procesos(request):
     proyectos=Proyecto.objects.all()
     if request.GET.get('proy'):
         proy=proyectos.get(id=request.GET.get('proy'))
+
+    if request.POST:
+        try:
+            diag=DiagramaProcesos.objects.get(id=proy.id)
+            diag.diagrama=request.POST.get('diagrama')
+            diag.save()
+        except:
+            DiagramaProcesos.objects.create(
+                proyecto_id=proy.id,
+                diagrama=request.POST.get('diagrama')
+            ).save()
+        messages.add_message(request,messages.SUCCESS,'Los cambios se registraron correctmente..!')
     contexto={
         'proyectos':proyectos,
         'proy':proy,
     }
     return render(request,'diagrama_procesos.html',contexto)
+
