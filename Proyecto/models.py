@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 
@@ -80,6 +82,16 @@ class Priorizacion(models.Model):
     fecha_inicio= models.DateField()
     fecha_fin= models.DateField()
     className=models.CharField(max_length=30)
+    dias=models.IntegerField(default=1)
+    
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        fi= datetime.datetime.strptime(self.fecha_inicio, "%Y-%m-%d")
+        ff= datetime.datetime.strptime(self.fecha_fin, "%Y-%m-%d")
+        dias=abs((ff - fi).days)
+        self.dias=dias
+        print(dias)
+        super(Priorizacion, self).save()
 
     class Meta:
         verbose_name_plural="E4 Priorización de actividades"
