@@ -229,7 +229,7 @@ def plan_actividades(request):
         'proy':proy,
         'requerimientos':requerimients,
         'priorizaciones':Priorizacion.objects.filter(requerimiento__proyecto_id=request.GET.get('proy')),
-        'fecha':datetime.datetime.now().date()
+        'fecha':datetime.datetime.now()
     }
     return render(request,'plan_actividades.html',contexto)
 
