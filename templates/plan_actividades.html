@@ -38,7 +38,7 @@
                 fecha='{{proy.fecha_inicio|date:"Y-m-d"}}'
             }else{
                 location.href = '/projects/requirements/planning/'
-                fecha=new Date()
+                fecha= {{fecha|date:"Y-m-d"}}
             }
         })
         console.log('fechaInicio:',fecha.getDate())
