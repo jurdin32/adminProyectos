@@ -15,7 +15,7 @@
     <script src="{% static 'assets/vendor/fullcalendar-3.7.0/locale/es.js' %}"></script>
     <script>
         let eventos = []
-        let fecha=""
+        let fecha= '{{fecha}}'
         {% for priorizacion in priorizaciones %}
             eventos.push({
                 id: '{{ priorizacion.id }}',
@@ -38,7 +38,7 @@
                 fecha='{{proy.fecha_inicio|date:"Y-m-d"}}'
             }else{
                 location.href = '/projects/requirements/planning/'
-                fecha= {{fecha|date:"Y-m-d"}}
+                fecha= '{{fecha}}'
             }
         })
         console.log('fechaInicio:',fecha)
@@ -51,7 +51,7 @@
             },
             lang: 'es',
             events: eventos,
-            defaultDate: '{{proy.fecha_inicio|date:"Y-m-d"}}',
+            defaultDate: fecha,
             eventColor: '#F4F6F9',
             navLinks: true, // can click day/week names to navigate views
             editable: false,

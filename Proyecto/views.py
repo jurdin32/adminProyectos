@@ -229,8 +229,9 @@ def plan_actividades(request):
         'proy':proy,
         'requerimientos':requerimients,
         'priorizaciones':Priorizacion.objects.filter(requerimiento__proyecto_id=request.GET.get('proy')),
-        'fecha':datetime.datetime.now()
+        'fecha':str(datetime.datetime.now().date())
     }
+    print(datetime.datetime.now().date())
     return render(request,'plan_actividades.html',contexto)
 
 def cambiar_fecha_actividad(request):
