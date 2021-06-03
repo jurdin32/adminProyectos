@@ -32,7 +32,7 @@
                     </div>
                 {% if request.GET.type == "PROCESOS" %}
                     <div class="card-body">
-                        <form action="{% url 'agregarApartado' proy.id %}" method="post">
+                        <form action="{% if proy %}{% url 'agregarApartado' proy.id %}{% endif %}" method="post">
                             {% csrf_token %}
                             <div class="input-group mb-3">
                                     <input type="text" class="form-control"
