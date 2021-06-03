@@ -30,7 +30,7 @@
                             <div class="custom-title">Proyectos</div>
                         </div>
                     </div>
-                {% if diagrama.tipo == "PROCESOS" %}
+                {% if request.GET.tipo == "PROCESOS" %}
                     <div class="card-body">
                         <form action="{% url 'agregarApartado' proy.id %}" method="post">
                             {% csrf_token %}
