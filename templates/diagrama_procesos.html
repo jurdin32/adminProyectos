@@ -34,6 +34,7 @@
                     <div class="card-body">
                         <form action="{% url 'agregarApartado' proy.id %}" method="post">
                             {% csrf_token %}
+
                             <div class="input-group mb-3">
                                     <input type="text" class="form-control"
                                            aria-label="Recipient's username"
